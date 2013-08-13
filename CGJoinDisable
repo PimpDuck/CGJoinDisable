@@ -1,0 +1,56 @@
+package me.PimpDuck.CGJoinDisable;
+
+import java.io.File;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class CGJoinDisable extends JavaPlugin
+{
+  public void onDisable()
+  {
+    System.out.println("[CGJoinDisable] Disabled!");
+  }
+
+  public void onEnable()
+  {
+    File fileconfig = new File(getDataFolder(), "config.yml");
+
+    if (!getDataFolder().exists())
+    {
+      System.out.println("[CGJoinDisable] Creating folder 'CGJoinDisable'...");
+
+      getDataFolder().mkdir();
+
+      if (!fileconfig.exists())
+      {
+        System.out.println("[CGJoinDisable] Creating config.yml...");
+
+        getConfig().options().copyDefaults(true);
+
+        saveConfig();
+      }
+      else {
+        System.out.println("[CGJoinDisable] File config.yml already exists! Ignoring it...");
+      }
+    } else {
+      System.out.println("[CGJoinDisable] Folder 'CGJoinDisable' already exists! Ignoring it...");
+
+      if (!fileconfig.exists())
+      {
+        System.out.println("[CGJoinDisable] Creating config.yml...");
+
+        getConfig().options().copyDefaults(true);
+
+        saveConfig();
+      }
+      else {
+        System.out.println("[CGJoinDisable] File config.yml already exists! Ignoring it...");
+      }
+    }
+
+    getServer().getPluginManager().registerEvents(new EventListener(this), this);
+
+    getCommand("jd").setExecutor(new CommandListener(this));
+
+    System.out.println("[CGJoinDisable] Enabled!");
+  }
+}
