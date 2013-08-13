@@ -1,0 +1,252 @@
+package me.PimpDuck.CGJoinDisable;
+
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class CommandListener extends JavaPlugin implements CommandExecutor
+{
+  private CGJoinDisable plugin;
+
+  public CommandListener(CGJoinDisable plugin)
+  {
+    this.plugin = plugin;
+  }
+
+  public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args)
+  {
+    String jd = ChatColor.DARK_AQUA + "[" + ChatColor.WHITE + "CGJoinDisable" + ChatColor.DARK_AQUA + "] ";
+
+    Player p = (Player)sender;
+
+    if (((sender instanceof Player)) && 
+      (cmd.getName().equalsIgnoreCase("jd")) && (p.hasPermission("CGJoinDisable.admin"))) {
+      if (args.length == 0) {
+        p.sendMessage(jd + ChatColor.GRAY + "Commands:");
+        p.sendMessage(ChatColor.AQUA + "/jd reload " + ChatColor.GRAY + "= Reloads the config");
+        p.sendMessage(ChatColor.AQUA + "/jd show " + ChatColor.GRAY + "= Shows you the current exception messages");
+        p.sendMessage(ChatColor.AQUA + "/jd <j/q/d/k> [msg] " + ChatColor.GRAY + "= Sets the exception message");
+        p.sendMessage(ChatColor.AQUA + "/jd <joinon;joinoff/quiton;quitoff/deathon;deathoff/kickon;kickoff> " + ChatColor.GRAY + "= Turns the message on or off");
+        p.sendMessage(ChatColor.AQUA + "/jd s <name> " + ChatColor.GRAY + "= Sets the servername");
+        p.sendMessage(ChatColor.RED + "You type in colorcodes with '&'!");
+        p.sendMessage(ChatColor.RED + "$p = Playername");
+        p.sendMessage(ChatColor.RED + "$s = Servername");
+      }
+      if (args.length == 1) {
+        if (args[0].equalsIgnoreCase("reload")) {
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "The config is reloaded sucessfully!");
+          return true;
+        }
+        if (args[0].equalsIgnoreCase("show")) {
+          p.sendMessage(jd + ChatColor.WHITE + "Configuration:");
+          if (this.plugin.getConfig().getBoolean("enable-join")) {
+            p.sendMessage(ChatColor.AQUA + "Join messages: " + ChatColor.GREEN + "ON");
+          }
+          if (!this.plugin.getConfig().getBoolean("enable-join")) {
+            p.sendMessage(ChatColor.AQUA + "Join messages: " + ChatColor.RED + "OFF");
+          }
+          if (this.plugin.getConfig().getBoolean("enable-quit")) {
+            p.sendMessage(ChatColor.AQUA + "Quit messages: " + ChatColor.GREEN + "ON");
+          }
+          if (!this.plugin.getConfig().getBoolean("enable-quit")) {
+            p.sendMessage(ChatColor.AQUA + "Quit messages: " + ChatColor.RED + "OFF");
+          }
+          if (this.plugin.getConfig().getBoolean("enable-death")) {
+            p.sendMessage(ChatColor.AQUA + "Death messages: " + ChatColor.GREEN + "ON");
+          }
+          if (!this.plugin.getConfig().getBoolean("enable-death")) {
+            p.sendMessage(ChatColor.AQUA + "Death messages: " + ChatColor.RED + "OFF");
+          }
+          if (this.plugin.getConfig().getBoolean("enable-kick")) {
+            p.sendMessage(ChatColor.AQUA + "Kick messages: " + ChatColor.GREEN + "ON");
+          }
+          if (!this.plugin.getConfig().getBoolean("enable-kick")) {
+            p.sendMessage(ChatColor.AQUA + "Kick messages: " + ChatColor.RED + "OFF");
+          }
+          p.sendMessage(ChatColor.AQUA + "Exception join message: §7" + this.plugin.getConfig().getString("exempt-join").replaceAll("(?i)&([0-9a-fk-or])", "§$1"));
+          p.sendMessage(ChatColor.AQUA + "Exception quit message: §7" + this.plugin.getConfig().getString("exempt-quit").replaceAll("(?i)&([0-9a-fk-or])", "§$1"));
+          p.sendMessage(ChatColor.AQUA + "Exception death message: §7" + this.plugin.getConfig().getString("exempt-death").replaceAll("(?i)&([0-9a-fk-or])", "§$1"));
+          p.sendMessage(ChatColor.AQUA + "Exception kick message: §7" + this.plugin.getConfig().getString("exempt-kick").replaceAll("(?i)&([0-9a-fk-or])", "§$1"));
+          p.sendMessage(ChatColor.AQUA + "Servername: §7" + this.plugin.getConfig().getString("servername").replaceAll("(?i)&([0-9a-fk-or])", "§$1"));
+          return true;
+        }
+        if ((args[0].equalsIgnoreCase("joinon")) && 
+          (this.plugin.getConfig().getBoolean("enable-join"))) {
+          this.plugin.getConfig().set("enable-join", Boolean.valueOf(true));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Join messages = " + ChatColor.GREEN + "ON");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("joinoff")) && 
+          (this.plugin.getConfig().getBoolean("enable-join"))) {
+          this.plugin.getConfig().set("enable-join", Boolean.valueOf(false));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Join messages = " + ChatColor.RED + "OFF");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("quiton")) && 
+          (this.plugin.getConfig().getBoolean("enable-quit"))) {
+          this.plugin.getConfig().set("enable-quit", Boolean.valueOf(true));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Quit messages = " + ChatColor.GREEN + "ON");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("quitoff")) && 
+          (this.plugin.getConfig().getBoolean("enable-quit"))) {
+          this.plugin.getConfig().set("enable-quit", Boolean.valueOf(false));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Quit messages = " + ChatColor.RED + "OFF");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("deathon")) && 
+          (this.plugin.getConfig().getBoolean("enable-quit"))) {
+          this.plugin.getConfig().set("enable-quit", Boolean.valueOf(true));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Quit messages = " + ChatColor.GREEN + "ON");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("deathoff")) && 
+          (this.plugin.getConfig().getBoolean("enable-death"))) {
+          this.plugin.getConfig().set("enable-death", Boolean.valueOf(false));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Death messages = " + ChatColor.RED + "OFF");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("kickon")) && 
+          (this.plugin.getConfig().getBoolean("enable-kick"))) {
+          this.plugin.getConfig().set("enable-kick", Boolean.valueOf(true));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Kick messages = " + ChatColor.GREEN + "ON");
+          return true;
+        }
+
+        if ((args[0].equalsIgnoreCase("kickoff")) && 
+          (this.plugin.getConfig().getBoolean("enable-kick"))) {
+          this.plugin.getConfig().set("enable-kick", Boolean.valueOf(false));
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          p.sendMessage(jd + ChatColor.AQUA + "Kick messages = " + ChatColor.RED + "OFF");
+          return true;
+        }
+      }
+
+      if ((args.length >= 1) && (args[0].equalsIgnoreCase("j"))) {
+        StringBuilder msg = new StringBuilder();
+
+        if (args.length >= 2) {
+          msg.append(args[1]);
+          for (int i = 2; i < args.length; i++) {
+            msg.append(" ");
+            msg.append(args[i]);
+          }
+
+          String newmsg = msg.toString();
+          newmsg = newmsg.replaceAll("(?i)&([0-9a-fk-or])", "§$1").replace("&", "§").replace("$", "%");
+          p.sendMessage(jd + ChatColor.AQUA + "New exception join message: §7" + newmsg);
+          this.plugin.getConfig().set("exempt-join", newmsg);
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          return true;
+        }
+      }
+      if ((args.length >= 1) && (args[0].equalsIgnoreCase("q"))) {
+        StringBuilder msg = new StringBuilder();
+
+        if (args.length >= 2) {
+          msg.append(args[1]);
+          for (int i = 2; i < args.length; i++) {
+            msg.append(" ");
+            msg.append(args[i]);
+          }
+
+          String newmsg = msg.toString();
+          newmsg = newmsg.replaceAll("(?i)&([0-9a-fk-or])", "§$1").replace("&", "§").replace("$", "%");
+          p.sendMessage(jd + ChatColor.AQUA + "New exception quit message: §7" + newmsg);
+          this.plugin.getConfig().set("exempt-quit", newmsg);
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          return true;
+        }
+      }
+      if ((args.length >= 1) && (args[0].equalsIgnoreCase("d"))) {
+        StringBuilder msg = new StringBuilder();
+
+        if (args.length >= 2) {
+          msg.append(args[1]);
+          for (int i = 2; i < args.length; i++) {
+            msg.append(" ");
+            msg.append(args[i]);
+          }
+
+          String newmsg = msg.toString();
+          newmsg = newmsg.replaceAll("(?i)&([0-9a-fk-or])", "§$1").replace("&", "§");
+          p.sendMessage(jd + ChatColor.AQUA + "New exception death message: §7" + newmsg);
+          this.plugin.getConfig().set("exempt-death", newmsg);
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          return true;
+        }
+      }
+      if ((args.length >= 1) && (args[0].equalsIgnoreCase("k"))) {
+        StringBuilder msg = new StringBuilder();
+
+        if (args.length >= 2) {
+          msg.append(args[1]);
+          for (int i = 2; i < args.length; i++) {
+            msg.append(" ");
+            msg.append(args[i]);
+          }
+
+          String newmsg = msg.toString();
+          newmsg = newmsg.replaceAll("(?i)&([0-9a-fk-or])", "§$1").replace("&", "§");
+          p.sendMessage(jd + ChatColor.AQUA + "New exception kick message: §7" + newmsg);
+          this.plugin.getConfig().set("exempt-kick", newmsg);
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          return true;
+        }
+      }
+      if ((args.length >= 1) && (args[0].equalsIgnoreCase("s"))) {
+        StringBuilder msg = new StringBuilder();
+
+        if (args.length >= 2) {
+          msg.append(args[1]);
+          for (int i = 2; i < args.length; i++) {
+            msg.append(" ");
+            msg.append(args[i]);
+          }
+
+          String newmsg = msg.toString();
+          newmsg = newmsg.replaceAll("(?i)&([0-9a-fk-or])", "§$1").replace("&", "§");
+          p.sendMessage(jd + ChatColor.AQUA + "New servername: §7" + newmsg);
+          this.plugin.getConfig().set("servername", newmsg);
+          this.plugin.saveConfig();
+          this.plugin.reloadConfig();
+          return true;
+        }
+      }
+
+    }
+
+    return false;
+  }
+
+}
