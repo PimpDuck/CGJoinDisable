@@ -1,0 +1,73 @@
+package me.PimpDuck.CGJoinDisable;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+public class EventListener
+  implements Listener
+{
+  private CGJoinDisable plugin;
+
+  public EventListener(CGJoinDisable plugin)
+  {
+    this.plugin = plugin;
+  }
+
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
+  public void onJoin(PlayerJoinEvent e)
+  {
+    Player p = e.getPlayer();
+
+    if (!this.plugin.getConfig().getBoolean("enable-join")) {
+      if (!p.getDisplayName().equalsIgnoreCase(""))
+        e.setJoinMessage("");
+      if (p.hasPermission("cgjoindisable.exempt.join"))
+        e.setJoinMessage(this.plugin.getConfig().getString("exempt-join").replace("%p", p.getDisplayName()).replace("%s", this.plugin.getConfig().getString("servername")));
+    }
+  }
+
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
+  public void onQuit(PlayerQuitEvent e)
+  {
+    Player p = e.getPlayer();
+
+    if (!this.plugin.getConfig().getBoolean("enable-quit")) {
+      if (!p.getDisplayName().equalsIgnoreCase(""))
+        e.setQuitMessage("");
+      if (p.hasPermission("cgjoindisable.exempt.quit"))
+        e.setQuitMessage(this.plugin.getConfig().getString("exempt-quit").replace("%p", p.getDisplayName()).replace("%s", this.plugin.getConfig().getString("servername")));
+    }
+  }
+
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
+  public void onDeath(PlayerDeathEvent e)
+  {
+    Player p = e.getEntity();
+
+    if (!this.plugin.getConfig().getBoolean("enable-death")) {
+      if (!p.getDisplayName().equalsIgnoreCase(""))
+        e.setDeathMessage("");
+      if (p.hasPermission("cgjoindisable.exempt.death"))
+        e.setDeathMessage(this.plugin.getConfig().getString("exempt-death").replace("%p", p.getDisplayName()).replace("%s", this.plugin.getConfig().getString("servername")));
+    }
+  }
+
+  @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=false)
+  public void onKick(PlayerKickEvent e)
+  {
+    Player p = e.getPlayer();
+
+    if (!this.plugin.getConfig().getBoolean("enable-kick")) {
+      if (!p.getDisplayName().equalsIgnoreCase(""))
+        e.setLeaveMessage("");
+      if (p.hasPermission("cgjoindisable.exempt.kick"))
+        e.setLeaveMessage(this.plugin.getConfig().getString("exempt-kick").replace("%p", p.getDisplayName()).replace("%s", this.plugin.getConfig().getString("servername")));
+    }
+  }
+}
