@@ -1,0 +1,22 @@
+name: CGJoinDisable
+version: 1.0
+main: me.PimpDuck.CGJoinDisable.CGJoinDisable
+author: PimpDuck
+description: Deactivates the messages
+commands:
+  jd:
+    description: The CGJoinDisable-Command
+    permission: cgjoindisable.admin
+    permission-message: You don't have permission to enable or disable messages!
+    default: op
+permissions:
+  cgjoindisable.exempt.join:
+    description: exempt.join
+  cgjoindisable.exempt.quit:
+    description: exempt.quit
+  cgjoindisable.exempt.death:
+    description: exempt.death
+  cgjoindisable.exempt.kick:
+    description: exempt.kick
+  cgjoindisable.admin:
+    description: admin
