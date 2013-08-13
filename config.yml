@@ -1,0 +1,20 @@
+# -------------------------------------------------------------------------------
+# CGJoinDisable by PimpDuck
+# -------------------------------------------------------------------------------
+# CONFIG:
+# -------------------------------------------------------------------------------
+# enable-join (true/false) = Enables or disables the using of the join message
+# enable-quit (true/false) = Enables or disables the using of the quit message
+# enable-death (true/false) = Enables or disables the using of the death message
+# exempt-join = Sets the join message for the exception
+# exempt-quit = Sets the quit message for the exception
+# exempt-death = Sets all death messages for the exception
+enable-join: false
+enable-quit: false
+enable-death: false
+enable-kick: false
+exempt-join: Â§4%p has joined %s!
+exempt-quit: Â§8%p leaves %s!
+exempt-death: Â§c%p has died!
+exempt-kick: Â§4%p was kicked from %s!
+servername: Craftgasm
